@@ -1,0 +1,61 @@
+<head>
+
+</head>
+<body>
+    <canvas id="canvas" height="500" width="500">
+    </canvas>
+    <button onclick="start()">start</button>
+</body>
+
+<script src="index.js"></script>
+<script>
+    
+    let m = generate();
+    draw(m)
+    function start(){
+        let n = new Node(m,0, null);
+    let completed = [];
+
+    let uncompleted = [n];
+    let steps = 0;
+    while(true){
+        //get the node with the least f (first entry)
+        let node = uncompleted[0]
+        console.log(node)
+        if(node.h == 0){
+            break;
+        }
+        uncompleted.splice(0,1);
+        let p = getPossibleMoves(node.value);
+        for(let coord of p.possibilities){
+            //create node
+            newMatrix = replace(p.positionX, p.positionY, coord.x, coord.y, node.value)
+            let exist = false
+            for(let ns of completed){
+                if(isSame(newMatrix, ns.value)) {
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist){
+                let newNode = new Node(newMatrix,node.g+0.25, node)
+                if(newNode.h == 0){
+                    break;
+                }
+            uncompleted.push(newNode);
+            }
+            
+        }
+        completed.push(node)
+        uncompleted.sort((a,b)=> a.f-b.f)
+        steps++;
+    }
+    }
+    
+    
+</script>
+<style>
+    body{
+        font-size: 25px;
+    }
+</style>
