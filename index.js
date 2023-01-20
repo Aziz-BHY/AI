@@ -8,7 +8,7 @@ class Node{
     constructor(val, g, father){
         this.value = val;
         this.g = g
-        this.h = getDiffrence(val)
+        this.h = heuristic(val)
         this.f = this.g+this.h;
         this.father = father
     }
@@ -42,6 +42,27 @@ function getDiffrence(value){
         }
         return diff;
 }
+function heuristic(matrix) {
+        let cost = 0;
+        for (let i = 0; i < matrix.length; i++) {
+          for (let j = 0; j < matrix[i].length; j++) {
+            if (matrix[i][j] !== null) {
+              let goalPos = this.getGoalPos(matrix[i][j]);
+              cost += Math.abs(goalPos.row - i) + Math.abs(goalPos.col - j);
+            }
+          }
+        }
+        return cost;
+}
+function getGoalPos(tile){
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+          if (matrix[i][j] === tile) {
+            return { row: i, col: j };
+          }
+        }
+      }
+}
 function generate(){
     let array = [0,1,2,3,4,5,6,7,8]
     
@@ -67,7 +88,7 @@ function getPossibleMoves(matrix){
     }else if(matrix[1][0] == 0){
         return new Possibility(1, 0, [{x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y:0}])
     }else if(matrix[1][1] == 0){
-        return new Possibility(1, 1, [{x: 1, y: 0}, {x: 0, y: 1}, {x: 1, y:2}, {x:2, y:2}])
+        return new Possibility(1, 1, [{x: 1, y: 0}, {x: 0, y: 1}, {x: 1, y:2}, {x:2, y:1}])
     }else if(matrix[1][2] == 0){
         return new Possibility(1, 2, [{x: 0, y: 2}, {x: 1, y: 1}, {x: 2, y: 2}])
     }else if(matrix[2][0] == 0){

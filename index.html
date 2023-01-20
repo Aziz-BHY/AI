@@ -23,6 +23,7 @@
         let node = uncompleted[0]
         console.log(node)
         if(node.h == 0){
+            console.log("found")
             break;
         }
         uncompleted.splice(0,1);
@@ -30,19 +31,11 @@
         for(let coord of p.possibilities){
             //create node
             newMatrix = replace(p.positionX, p.positionY, coord.x, coord.y, node.value)
-            let exist = false
-            for(let ns of completed){
-                if(isSame(newMatrix, ns.value)) {
-                    exist = true;
-                    break;
-                }
-            }
-            if(!exist){
-                let newNode = new Node(newMatrix,node.g+0.25, node)
-                if(newNode.h == 0){
-                    break;
-                }
+            let obj = completed.find(o => isSame(newMatrix, o.value));
+            if(!obj){
+                let newNode = new Node(newMatrix,node.g+1, node)
             uncompleted.push(newNode);
+            uncompleted = [...new Set(uncompleted.map(o => o.value))].map(val => uncompleted.find(o => o.value === val));
             }
             
         }
