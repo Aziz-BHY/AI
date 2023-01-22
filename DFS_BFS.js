@@ -61,11 +61,14 @@ function hasSolution(state) {
 function DFS(start, goal) {
   let stack = [start];
   let visited = new Set();
-  if (hasSolution(start)) {
+  let begin = new Date();
+  //if (hasSolution(start)) {
     while (stack.length > 0) {
       let current = stack.pop();
       if (JSON.stringify(current) === JSON.stringify(goal)) {
         console.log("Visited states: " + visited.size);
+        document.getElementById("nodes").innerHTML = visited.size;
+        document.getElementById("exec").innerHTML = (new Date() - begin) + " ms";
         return current;
       }
       visited.add(current.toString());
@@ -76,9 +79,9 @@ function DFS(start, goal) {
         }
       }
     }
-  } else {
+ /* } else {
     console.log("The puzzle has no solution!");
-  }
+  }*/
 
   return null;
 }
@@ -87,6 +90,7 @@ function DFS(start, goal) {
 function BFS(start, goal) {
   let queue = [start];
   let visited = new Set();
+  let begin = new Date();
   if (hasSolution(start)) {
     while (queue.length > 0) {
       let current = queue.shift();
@@ -94,6 +98,8 @@ function BFS(start, goal) {
       //    console.log("Visited states: " + visited.size);
       if (JSON.stringify(current) === JSON.stringify(goal)) {
         console.log("Visited states: " + visited.size);
+        document.getElementById("nodes").innerHTML = visited.size;
+        document.getElementById("exec").innerHTML = (new Date() - begin) + " ms";
         return current;
       }
       visited.add(current.toString());
@@ -114,7 +120,7 @@ function BFS(start, goal) {
 let initialState = [1, 0, 2, 3, 4, 5, 6, 7, 8];
 let goalState = [1, 2, 3, 4, 5, 6, 7, 8, 0];
 
-// start timer
+/*// start timer
 let start = new Date();
 console.log("Using DFS: ");
 let result = DFS(initialState, goalState);
@@ -136,3 +142,4 @@ if (result) {
 // stop timer
 end = new Date();
 console.log("Time taken BFS: " + (end - start) + "ms");
+*/

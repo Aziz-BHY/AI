@@ -9,87 +9,59 @@
   <div class="tier tier7" id="tier7"></div>
   <div class="tier tier8" id="tier8"></div>
   <div class="tier tier9" id="tier9"></div>
-
-  <button onclick="start()">Commencer</button>
+  <div class="exec">temps d'execution: <span id="exec"> </span></div>
+  <div class="nbnode">nombre de noeuds explorés: <span id="nodes"> </span></div>
+  <div class="it">nombre d'itérations: <span id="it"> </span></div>
+  <button onclick="startA()">A*</button>
+  <button onclick="startP()">Profondeur</button>
+  <button onclick="startL()">Largeur</button>
   <button onclick="newGenerate()">Générer nouvelle matrice </button>
 </body>
 
 <script src="index.js"></script>
+<script src="DFS_BFS.js"></script>
 <script>
   var m = [
     [1, 2, 3],
     [4, 5, 6],
     [7, 8, 0],
   ];
+  let m1 = [...m[0], ...m[1], ...m[2]]
   draw(m);
     function newGenerate(){
         m = generate()
+        m1 = [...m[0], ...m[1], ...m[2]]
         draw(m)
     }
-  function start() {
-    //initialisation
-    let n = new Node(m, 0, null);
-    let completed = [];
-    let uncompleted = [n];
-    let final = null;
-    while (true) {
-      //get the node with the least f (first entry)
-      let node = uncompleted[0];
-      //if this node is the final one
-      if (node.h == 0) {
-        alert("found");
-        final = node;
-        break;
-      }
-      //delete this node from uncompleted
-      uncompleted.splice(0, 1);
-      //get all possible moves
-      let p = getPossibleMoves(node.value);
-      for (let coord of p.possibilities) {
-        //create node
-        newMatrix = replace(
-          p.positionX,
-          p.positionY,
-          coord.x,
-          coord.y,
-          node.value
-        );
-        //check if node is in the completed array
-        let obj = completed.find((o) => isSame(newMatrix, o.value));
-        if (!obj) {
-          //if not add it to uncompleted array
-          let newNode = new Node(newMatrix, node.g + 1, node);
-          uncompleted.push(newNode);
-          uncompleted = [...new Set(uncompleted.map((o) => o.value))].map(
-            (val) => uncompleted.find((o) => o.value === val)
-          );
-        }
-      }
-      completed.push(node);
-      uncompleted.sort((a, b) => a.f - b.f);
+  function startA() {
+      Astar(m)
     }
-    //get all moves in backward
-    let steps = [];
-    while (final.father) {
-      steps.push(final.value);
-      final = final.father;
+    function startP() {
+      let result = DFS(m1, goalState)
+      console.log(result)
     }
-    steps.push(final.value);
-    //show moves
-    /*for (let i = steps.length - 1; i >= 0; i--) {
-      draw(steps[i]);
-    }*/
-    let i = steps.length - 1;
-    setInterval(()=>{
-      if(i < 0) clearInterval();
-      draw(steps[i]);
-      i--;
-      }, 2000)
+    function startL() {
+      BFS(m1, goalState)
     }
 </script>
 <style>
   body {
     font-size: 25px;
+  }
+  .exec{
+    position: absolute;
+    top: 120px;
+    left: 600px;
+  }
+  .it{
+    position: absolute;
+    top: 180px;
+    left: 600px;
+  }
+  .nbnode{
+    position: absolute;
+    top: 150px;
+    left: 600px;
   }
   .zero{
     background-color: black;

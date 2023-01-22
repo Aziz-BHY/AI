@@ -55,7 +55,7 @@ const matrix = [
   }
   function generate() {
     let mat = JSON.parse(JSON.stringify(matrix));
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
       let poss = getPossibleMoves(mat);
       let picked = Math.floor(Math.random() * poss.possibilities.length);
       mat = replace(
@@ -152,3 +152,75 @@ const matrix = [
       }
     }
   }  
+
+  function Astar(m) {
+    console.log(m)
+    //initialisation
+    let n = new Node(m, 0, null);
+    let completed = [];
+    let uncompleted = [n];
+    let final = null;
+    let nodenb = 0;
+    let begin = new Date();
+    let end;
+    while (true) {
+      nodenb++;
+      //get the node with the least f (first entry)
+      let node = uncompleted[0];
+      //if this node is the final one
+      if (node.h == 0) {
+        end = new Date() - begin
+        alert("found");
+        final = node;
+        break;
+      }
+      //delete this node from uncompleted
+      uncompleted.splice(0, 1);
+      //get all possible moves
+      let p = getPossibleMoves(node.value);
+      for (let coord of p.possibilities) {
+        //create node
+        newMatrix = replace(
+          p.positionX,
+          p.positionY,
+          coord.x,
+          coord.y,
+          node.value
+        );
+        //check if node is in the completed array
+        let obj = completed.find((o) => isSame(newMatrix, o.value));
+        if (!obj) {
+          //if not add it to uncompleted array
+          let newNode = new Node(newMatrix, node.g + 1, node);
+          uncompleted.push(newNode);
+          uncompleted = [...new Set(uncompleted.map((o) => o.value))].map(
+            (val) => uncompleted.find((o) => o.value === val)
+          );
+        }
+      }
+      completed.push(node);
+      uncompleted.sort((a, b) => a.f - b.f);
+    }
+    document.getElementById("exec").innerHTML = end + " ms";
+    document.getElementById("nodes").innerHTML = nodenb;
+    
+    //get all moves in backward
+    let steps = [];
+    while (final.father) {
+      steps.push(final.value);
+      final = final.father;
+    }
+    steps.push(final.value);
+    document.getElementById("it").innerHTML = steps.length;
+
+    //show moves
+    /*for (let i = steps.length - 1; i >= 0; i--) {
+      draw(steps[i]);
+    }*/
+    let i = steps.length - 1;
+    setInterval(()=>{
+      if(i < 0) clearInterval();
+      draw(steps[i]);
+      i--;
+      }, 1000)
+    }
