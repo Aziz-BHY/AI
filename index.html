@@ -1,54 +1,142 @@
-<head>
-
-</head>
+<head> </head>
 <body>
-    <canvas id="canvas" height="500" width="500">
-    </canvas>
-    <button onclick="start()">start</button>
+  <div class="tier tier1" id="tier1"></div>
+  <div class="tier tier2" id="tier2"></div>
+  <div class="tier tier3" id="tier3"></div>
+  <div class="tier tier4" id="tier4"></div>
+  <div class="tier tier5" id="tier5"></div>
+  <div class="tier tier6" id="tier6"></div>
+  <div class="tier tier7" id="tier7"></div>
+  <div class="tier tier8" id="tier8"></div>
+  <div class="tier tier9" id="tier9"></div>
+
+  <button onclick="start()">Commencer</button>
+  <button onclick="newGenerate()">Générer nouvelle matrice </button>
 </body>
 
 <script src="index.js"></script>
 <script>
-    
-    let m = generate();
-    draw(m)
-    function start(){
-        let n = new Node(m,0, null);
+  var m = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 0],
+  ];
+  draw(m);
+    function newGenerate(){
+        m = generate()
+        draw(m)
+    }
+  function start() {
+    //initialisation
+    let n = new Node(m, 0, null);
     let completed = [];
-
     let uncompleted = [n];
-    let steps = 0;
-    while(true){
-        //get the node with the least f (first entry)
-        let node = uncompleted[0]
-        console.log(node)
-        if(node.h == 0){
-            console.log("found")
-            break;
+    let final = null;
+    while (true) {
+      //get the node with the least f (first entry)
+      let node = uncompleted[0];
+      //if this node is the final one
+      if (node.h == 0) {
+        alert("found");
+        final = node;
+        break;
+      }
+      //delete this node from uncompleted
+      uncompleted.splice(0, 1);
+      //get all possible moves
+      let p = getPossibleMoves(node.value);
+      for (let coord of p.possibilities) {
+        //create node
+        newMatrix = replace(
+          p.positionX,
+          p.positionY,
+          coord.x,
+          coord.y,
+          node.value
+        );
+        //check if node is in the completed array
+        let obj = completed.find((o) => isSame(newMatrix, o.value));
+        if (!obj) {
+          //if not add it to uncompleted array
+          let newNode = new Node(newMatrix, node.g + 1, node);
+          uncompleted.push(newNode);
+          uncompleted = [...new Set(uncompleted.map((o) => o.value))].map(
+            (val) => uncompleted.find((o) => o.value === val)
+          );
         }
-        uncompleted.splice(0,1);
-        let p = getPossibleMoves(node.value);
-        for(let coord of p.possibilities){
-            //create node
-            newMatrix = replace(p.positionX, p.positionY, coord.x, coord.y, node.value)
-            let obj = completed.find(o => isSame(newMatrix, o.value));
-            if(!obj){
-                let newNode = new Node(newMatrix,node.g+1, node)
-            uncompleted.push(newNode);
-            uncompleted = [...new Set(uncompleted.map(o => o.value))].map(val => uncompleted.find(o => o.value === val));
-            }
-            
-        }
-        completed.push(node)
-        uncompleted.sort((a,b)=> a.f-b.f)
-        steps++;
+      }
+      completed.push(node);
+      uncompleted.sort((a, b) => a.f - b.f);
     }
+    //get all moves in backward
+    let steps = [];
+    while (final.father) {
+      steps.push(final.value);
+      final = final.father;
     }
-    
-    
+    steps.push(final.value);
+    //show moves
+    for (let i = steps.length - 1; i >= 0; i--) {
+      draw(steps[i]);
+    }
+  }
 </script>
 <style>
-    body{
-        font-size: 25px;
-    }
+  body {
+    font-size: 25px;
+  }
+  .tier {
+    background-color: rgb(233, 230, 230);
+    width: 50px;
+    height: 50px;
+    border: 3px solid black;
+    padding: 50px;
+    margin: 20px;
+    text-align: center;
+  }
+  .tier1 {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
+  .tier2 {
+    position: absolute;
+    top: 40px;
+    left: 200px;
+  }
+  .tier3 {
+    position: absolute;
+    top: 40px;
+    left: 360px;
+  }
+  .tier4 {
+    position: absolute;
+    top: 200px;
+    left: 40px;
+  }
+  .tier5 {
+    position: absolute;
+    top: 200px;
+    left: 200px;
+  }
+  .tier6 {
+    position: absolute;
+    top: 200px;
+    left: 360px;
+  }
+  .tier7 {
+    position: absolute;
+    top: 360px;
+    left: 40px;
+  }
+  .tier8 {
+    position: absolute;
+    top: 360px;
+    left: 200px;
+  }
+  .tier9 {
+    position: absolute;
+    top: 360px;
+    left: 360px;
+  }
 </style>
