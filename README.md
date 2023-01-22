@@ -48,3 +48,11 @@ façon déterminée par un nombre minimal de mouvements. Le Rubik's Cube est auj
             si nœud adjacent n'est pas encore dans la liste ouverte, l'ajouter à la liste ouverte
             sinon, si le coût f(nœud adjacent) est meilleur que le coût actuel, mettre à jour le coût f(nœud adjacent)
 ```
+
+# Etude comparative des trois méthodes de recherche (DFS, BFS et A\*)
+
+- En termes de nombre de noeuds développés, DFS développera le plus car il va plus profond, BFS développera moins car il vérifie tous les voisins avant d'aller plus profond et A\* développera le moins car il utilise une fonction heuristique pour ne vérifier que les noeuds les plus prometteurs.
+
+- En termes de temps d'exécution, BFS serait plus rapide que DFS car il trouvera la solution plus rapidement et A\* sera plus rapide que BFS car il utilise une heuristique pour guider la recherche.
+
+- Il est important de noter que le temps et les noeuds développés dépendront de la configuration initiale et de la fonction heuristique utilisée pour la recherche A\*.
