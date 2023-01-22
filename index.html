@@ -76,17 +76,28 @@
     }
     steps.push(final.value);
     //show moves
-    for (let i = steps.length - 1; i >= 0; i--) {
+    /*for (let i = steps.length - 1; i >= 0; i--) {
       draw(steps[i]);
+    }*/
+    let i = steps.length - 1;
+    setInterval(()=>{
+      if(i < 0) clearInterval();
+      draw(steps[i]);
+      i--;
+      }, 2000)
     }
-  }
 </script>
 <style>
   body {
     font-size: 25px;
   }
-  .tier {
+  .zero{
+    background-color: black;
+  }
+  .notzero{
     background-color: rgb(233, 230, 230);
+  }
+  .tier {
     width: 50px;
     height: 50px;
     border: 3px solid black;

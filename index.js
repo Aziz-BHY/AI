@@ -141,4 +141,14 @@ const matrix = [
     document.getElementById("tier7").innerHTML = matrix[2][0];
     document.getElementById("tier8").innerHTML = matrix[2][1];
     document.getElementById("tier9").innerHTML = matrix[2][2];
+    for(let i = 1; i<10; i++){
+      let elem = document.getElementById("tier"+i);
+      if(elem.innerHTML == 0){
+        elem.classList.add("zero")
+        elem.classList.remove("notzero")
+      }else{
+        elem.classList.remove("zero")
+        elem.classList.add("notzero")
+      }
+    }
   }  
