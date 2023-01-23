@@ -170,7 +170,6 @@ const matrix = [
       //if this node is the final one
       if (node.h == 0) {
         end = new Date() - begin
-        alert("found");
         final = node;
         break;
       }
@@ -224,3 +223,4 @@ const matrix = [
       i--;
       }, 1000)
     }
+

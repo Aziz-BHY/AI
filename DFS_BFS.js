@@ -9,16 +9,19 @@ La fonction generateNextStates(current) est donc une fonction utile pour les alg
 
 function generateNextStates(current) {
   let nextStates = [];
-  let blankIndex = current.indexOf(0);
+  let blankIndex = current.value.indexOf(0);
   let dx = [-1, 1, 0, 0];
   let dy = [0, 0, -1, 1];
   for (let i = 0; i < 4; i++) {
     let x = (blankIndex % 3) + dx[i];
     let y = Math.floor(blankIndex / 3) + dy[i];
     if (x >= 0 && x < 3 && y >= 0 && y < 3) {
-      let next = current.slice();
+      let next = current.value.slice();
       [next[blankIndex], next[x + y * 3]] = [next[x + y * 3], next[blankIndex]];
-      nextStates.push(next);
+      nextStates.push({
+        value: next,
+        parent: current,
+      });
     }
   }
   return nextStates;
@@ -59,22 +62,26 @@ function hasSolution(state) {
 
 // Recherche en profondeur d'abord
 function DFS(start, goal) {
-  let stack = [start];
+  let stack = [{
+    value : start,
+    parent : null
+  }]
   let visited = new Set();
   let begin = new Date();
   //if (hasSolution(start)) {
     while (stack.length > 0) {
       let current = stack.pop();
-      if (JSON.stringify(current) === JSON.stringify(goal)) {
+      if (JSON.stringify(current.value) === JSON.stringify(goal)) {
         console.log("Visited states: " + visited.size);
         document.getElementById("nodes").innerHTML = visited.size;
         document.getElementById("exec").innerHTML = (new Date() - begin) + " ms";
+        afficher(current);
         return current;
       }
-      visited.add(current.toString());
+      visited.add(current.value.toString());
       let nextStates = generateNextStates(current);
       for (let nextState of nextStates) {
-        if (!visited.has(nextState.toString())) {
+        if (!visited.has(nextState.value.toString())) {
           stack.push(nextState);
         }
       }
@@ -88,7 +95,12 @@ function DFS(start, goal) {
 
 // Recherche en largeur d'abord
 function BFS(start, goal) {
-  let queue = [start];
+  let queue = [
+    {
+      value : start,
+      parent : null
+    }
+  ];
   let visited = new Set();
   let begin = new Date();
   if (hasSolution(start)) {
@@ -96,50 +108,62 @@ function BFS(start, goal) {
       let current = queue.shift();
       //    console.log("Current state: " + current);
       //    console.log("Visited states: " + visited.size);
-      if (JSON.stringify(current) === JSON.stringify(goal)) {
+      if (JSON.stringify(current.value) === JSON.stringify(goal)) {
         console.log("Visited states: " + visited.size);
         document.getElementById("nodes").innerHTML = visited.size;
         document.getElementById("exec").innerHTML = (new Date() - begin) + " ms";
+        afficher(current);
         return current;
       }
-      visited.add(current.toString());
+      visited.add(current.value.toString());
       let nextStates = generateNextStates(current);
       for (let nextState of nextStates) {
-        if (!visited.has(nextState.toString())) {
+        if (!visited.has(nextState.value.toString())) {
           queue.push(nextState);
         }
       }
     }
-  } else {
+  } /* else {
     console.log("The puzzle has no solution!");
-  }
+  } */
   return null;
 }
 
-// define the initial state and goal state of the puzzle
-let initialState = [1, 0, 2, 3, 4, 5, 6, 7, 8];
-let goalState = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+ function draw2(tab) {
+    document.getElementById("tier1").innerHTML = tab[0];
+    document.getElementById("tier2").innerHTML = tab[1];
+    document.getElementById("tier3").innerHTML = tab[2];
+    document.getElementById("tier4").innerHTML = tab[3];
+    document.getElementById("tier5").innerHTML = tab[4];
+    document.getElementById("tier6").innerHTML = tab[5];
+    document.getElementById("tier7").innerHTML = tab[6];
+    document.getElementById("tier8").innerHTML = tab[7];
+    document.getElementById("tier9").innerHTML = tab[8];
+    for(let i = 1; i<10; i++){
+      let elem = document.getElementById("tier"+i);
+      if(elem.innerHTML == 0){
+        elem.classList.add("zero")
+        elem.classList.remove("notzero")
+      }else{
+        elem.classList.remove("zero")
+        elem.classList.add("notzero")
+      }
+    }
+  }  
 
-/*// start timer
-let start = new Date();
-console.log("Using DFS: ");
-let result = DFS(initialState, goalState);
-if (result) {
-  console.log("Found goal state: " + result);
+
+function afficher(result){
+    let steps = [];
+    while (result.parent) {
+      steps.push(result.value);
+      result = result.parent;
+    }
+    steps.push(result.value);
+    document.getElementById("it").innerHTML = steps.length;
+    let i = steps.length - 1;
+    setInterval(()=>{
+      if(i < 0) clearInterval();
+      draw2(steps[i]);
+      i--;
+      }, 1000)
 }
-// stop timer
-let end = new Date();
-console.log("Time taken DFS: " + (end - start) + "ms");
-
-// start timer
-start = new Date();
-console.log("Using BFS: ");
-result = BFS(initialState, goalState);
-if (result) {
-  console.log("Found goal state: " + result);
-}
-
-// stop timer
-end = new Date();
-console.log("Time taken BFS: " + (end - start) + "ms");
-*/

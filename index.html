@@ -12,6 +12,7 @@
   <div class="exec">temps d'execution: <span id="exec"> </span></div>
   <div class="nbnode">nombre de noeuds explorés: <span id="nodes"> </span></div>
   <div class="it">nombre d'itérations: <span id="it"> </span></div>
+  <div class="x">etat: <span id="x"> </span></div>
   <button onclick="startA()">A*</button>
   <button onclick="startP()">Profondeur</button>
   <button onclick="startL()">Largeur</button>
@@ -34,14 +35,36 @@
         draw(m)
     }
   function startA() {
-      Astar(m)
+      document.getElementById("x").innerHTML = "En cours..."
+     let interval = setInterval(()=>{
+      clearInterval(interval)
+       Astar(m)
+      document.getElementById("x").innerHTML = "Terminé"
+     },1000)
     }
     function startP() {
-      let result = DFS(m1, goalState)
+      document.getElementById("x").innerHTML = "En cours..."
+      let goalState = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+      let interval = setInterval(()=>{
+      clearInterval(interval)
+       let result = DFS(m1, goalState)
+
       console.log(result)
+      document.getElementById("x").innerHTML = "Terminé"
+     },1000)
+      
+
     }
     function startL() {
-      BFS(m1, goalState)
+      document.getElementById("x").innerHTML = "En cours..."
+      let goalState = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+      let interval = setInterval(()=>{
+      clearInterval(interval)
+       BFS(m1, goalState)
+      document.getElementById("x").innerHTML = "Terminé"
+     },1000)
+      
+
     }
 </script>
 <style>
@@ -51,6 +74,11 @@
   .exec{
     position: absolute;
     top: 120px;
+    left: 600px;
+  }
+  .x{
+    position: absolute;
+    top: 210px;
     left: 600px;
   }
   .it{
